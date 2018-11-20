@@ -1,0 +1,78 @@
+1)	First I have launch two instances Ubuntu Server 16.04 LTS in AWS
+
+Step 1: Go to Aws dashboard EC2 tab  Launch instances  select free trail, Ubuntu 16 version select volume  VPC, subnets are choosing- security groups 
+Launch instance with pem key.
+
+Step 2 : Pem key generate private key in PUTTY KEYGEN, bcoz we will connect the putty.
+
+Step 3: once we will connect the instances, we are change the root password.
+
+Command:  sudo su
+                   nasswd
+                   newpasswd
+
+Step 4: update the repo
+            # apt-get update
+
+Step 5:  Install a softwares in manually
+a)	NVM Installation: # apt-get install build-essential libss1-dev
+                     downloading Website       # curl-                https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
+         				  # source ~/.profile
+   				  # nvm –version
+
+b)	NVM Installation:       # apt install curl
+Download site  # curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -
+                                                             # apt install nodejs
+                                                              # node –v
+c)	DOCKER Installation : # curl –fsSL get.docker.com –o get.docker.sh
+                                            # sh get.docker.sh
+                                           # docker –version
+
+d)	DOCKER Compose  Installation :
+# curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+Permissions 
+# chmod +x /usr/local/bin/docker-compose
+# docker-compose –version
+
+e)	Git Installation: 
+# apt-get install git
+
+f)	Open SSL
+Download site # wget https://www.openssl.org/source/openssl-1.1.0f.tar.gz 
+                           # tar xzvf openssl-1.1.0f.tar.gz 
+                          # cd openssl-1.1.0f
+                         # apt-get install openssl
+                        # openssl version –a
+2)	Create a Docker Container in MSR-test-Instance-1 using Docker Compose file and ensure apache webserver is installed
+Apache installion via ansible play book: #  vim ansible playbook.yml
+
+- name: configuring apache2
+  hosts: 172.31.81.232
+  tasks:
+  - name: install apache2
+    apt:
+     name: apache2
+     state: present
+     update_cache: no
+  - name: edit the index.html file
+    copy:
+     content: "welcome to my websitepage\n"
+     dest: /var/www/html/index.html
+  - name: restart apache2
+    service:
+     name: apache2
+     state: restarted
+  - name: check url response
+    uri:
+     url: //172.31.81.232
+     status: 200
+
+
+	running a playbook # ansible-playbook playbook.yml
+
+
+3)	MSR-test-Instance-2 installed CouchDB Database is installed (but normally using Docker container) 
+ # docker run -d --name my-couchdb -p 5984:5984 -e COUCHDB_USER=admin -e COUCHDB_PASSWORD=password -d couchdb
+
+
+
